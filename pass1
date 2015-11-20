@@ -1,0 +1,145 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+int start=0;
+void main()
+{
+ pass1();
+pass2();
+}
+int pass1()
+{
+    FILE *f1,*f2,*f3;
+    char label[10],mn[10],op[10],sym[10],opc[10],code[10];
+    int locctr=0,temp,flag=0,flag1=0,v,plen,l;
+    x[0]='0';
+
+    f1=fopen("input.txt","r");
+    f2=fopen("inter.txt","w");
+
+    fscanf(f1,"%s %s %x",label,mn,&temp);
+    if(strcmp(mn,"start")==0)
+    {
+
+        start=temp;
+        locctr=start;
+
+
+        fprintf(f2,"%s %s %x\n",label,mn,temp);
+
+        fscanf(f1,"%s %s %s ",label,mn,op);
+    }
+    else
+    {
+
+        locctr=0;
+    }
+
+        while(strcmp(mn,"end")!=0)
+        {
+            if(strcmp(label,"-")!=0)
+            {
+
+                f3=fopen("symtab1.txt","r");
+
+                flag=0;
+                while(!feof(f3))
+                {
+                    fscanf(f3,"%s",sym);
+
+                if(strcmp(label,sym)==0)
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            fclose(f3);
+            if(flag==0)
+            {
+
+                f3=fopen("symtab1.txt","a");
+                fprintf(f3,"%s %x\n",label,locctr);
+                fclose(f3);
+
+            }
+            else
+            {
+                printf("ERROR\n");
+            }
+        }
+        fprintf(f2,"%x %s %s %s\n",locctr,label,mn,op);
+
+
+
+      flag1=0;
+       f4=fopen("optab.txt","r");
+        while(!feof(f4))
+        {
+
+            fscanf(f4,"%s %s",opc,code);
+            if(strcmp(mn,opc)==0)
+            {
+
+                flag1=1;
+                break;
+            }
+        }
+        fclose(f4);
+
+            if(flag1==1)
+            {
+                locctr+=3;
+            }
+
+              else if(strcmp(mn,"word")==0)
+                {
+                    locctr+=3;
+
+                }
+                else if(strcmp(mn,"resw")==0)
+                {
+
+                       v=atoi(op);
+                    locctr=locctr+3*v;
+
+                }
+                else if(strcmp(mn,"resb")==0)
+                {
+                    v=atoi(op);
+                    locctr+=v;
+
+                }
+                else if(strcmp(mn,"byte")==0)
+                {
+
+                    if(op[0]=='c')
+                    {
+                        l=strlen(op);
+                       l=l-3;
+                     locctr+=l;
+                    }
+                    else if(op[0]='x')
+                    {
+                        l=strlen(op);
+                        l=(l/2)-1;
+
+                        locctr+=l;
+                    }
+
+
+                }
+                else
+                {
+                    printf("ERROR1\n");
+                }
+
+fscanf(f1,"%s %s %s ",label,mn,op);
+
+    }
+    fprintf(f2,"%x %s %s %x\n",p,label,mn,p);
+    plen=locctr-start;
+    fclose(f1);
+    fclose(f2);
+return(plen);
+}
+}
