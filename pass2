@@ -1,0 +1,266 @@
+void pass2(int plen)
+{
+
+    FILE *f1,*f2,*f3,*f4,*f5,*f6,*f7;
+    char label[10],mn[10],op[10],sym[10],opc[10],code[10],mnn[10],code1[6],x[1],ch[1],su[10];
+    int locctr=0,temp,temp1,flag=0,flag1=0,v,plen,l,add,ad,opadd,addr,i=0,flag2=0,c,vv,p=-1,r=30,size=0,j=0,k=0,e[10],s,y=0,m=0;
+    x[0]='0';
+
+    f1=fopen("input.txt","r");
+    f2=fopen("inter.txt","r");
+    f5=fopen("object2.txt","w");
+
+    fscanf(f2,"%s %s %x",label,mnn,&temp);
+    fprintf(f5,"%s %s %x\n",label,mnn,temp);
+
+    fscanf(f2,"%x %s %s %s",&temp,label,mnn,op);
+
+     while(strcmp(mnn,"end")!=0)
+     {
+
+           if((strcmp(mnn,"resw")!=0)&&(strcmp(mnn,"byte")!=0)&&(strcmp(mnn,"rsub")!=0))
+           {
+          flag1=0;
+              f4=fopen("optab.txt","r");
+        while(!feof(f4))
+        {
+
+            fscanf(f4,"%s %s",opc,code);
+
+            if(strcmp(mnn,opc)==0)
+            {
+
+                flag1=1;
+                break;
+            }
+        }
+        fclose(f4);
+        if(flag1==1)
+        {
+
+            fprintf(f5,"%x %s %s %s %s",temp,label,mnn,op,code);
+        }
+            f3=fopen("symtab1.txt","r");
+                flag=0;
+                while(!feof(f3))
+                {
+
+                    fscanf(f3,"%s %x",sym,&addr);
+                if(strcmp(op,sym)==0)
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            fclose(f3);
+
+            if(flag==1)
+            {
+                fprintf(f5,"%x\n",addr);
+            }
+               }
+
+               else if(strcmp(mnn,"byte")==0)
+               {
+                  fprintf(f5,"%x %s %s %s ",temp,label,mnn,op);
+
+                   if(op[0]=='x')
+                   {
+                    l=strlen(op);
+
+                       for(i=2;i<=l-2;i++)
+                       {
+
+                       fprintf(f5,"%c",op[i]);
+
+                       }
+                       fprintf(f5,"\n");
+
+                   }
+                   else if(op[0]=='c')
+                   {
+                       l=strlen(op);
+
+                        if((l==6)&&(op[2]=='e' && op[3]=='o' && op[4]=='f'))
+                          {
+                              fprintf(f5,"454F46\n");
+                          }
+                          else
+                          {
+                       for(i=2;i<=l-2;i++)
+                       {
+                           v=(int)op[i];
+
+                           fprintf(f5,"%x",v);
+                       }
+
+                       fprintf(f5,"\n");
+                          }
+                   }
+              }
+          else if(strcmp(mnn,"resw")==0)
+          {
+             fprintf(f5,"%x %s %s %s %x\n",temp,label,mnn,op,p);
+          }
+          else if(strcmp(mnn,"rsub")==0)
+          {
+          flag1=0;
+              f4=fopen("optab.txt","r");
+        while(!feof(f4))
+        {
+
+            fscanf(f4,"%s %s",opc,code);
+
+            if(strcmp(mnn,opc)==0)
+            {
+
+                flag1=1;
+                break;
+            }
+        }
+        fclose(f4);
+        if(flag1==1)
+        {
+
+           for(i=0;i<2;i++)
+           {
+               code1[i]=code[i];
+           }
+           for(i=2;i<6;i++)
+           {
+             code1[i]=x[0];
+           }
+            fprintf(f5,"%x %s %s %s ",temp,label,mnn,op);
+            for(i=0;i<6;i++)
+           {
+               fprintf(f5,"%c",code1[i]);
+           }
+
+            fprintf(f5,"\n");
+        }
+          }
+
+            fscanf(f2,"%x %s %s %s",&temp,label,mnn,op);
+}
+     fprintf(f5,"%x %s %s %x %x",p,label,mnn,p,p);
+     fclose(f5);
+
+     f5=fopen("object2.txt","r");
+     f6=fopen("final.txt","w");
+    f7=fopen("actual.txt","w");
+
+
+
+     fscanf(f5,"%s %s %x",label,mn,&temp);
+     fprintf(f6,"H %s %x %x",label,temp,plen);
+     fscanf(f5,"%x %s %s %s %s",&temp,label,mn,op,code);
+    fprintf(f6,"\nT %x ",temp);
+       while(strcmp(mn,"end")!=0)
+       {
+           if(strcmp(mn,"resw")!=0)
+           {
+               c=strlen(code);
+               c=c/2;
+               if(c<=r)
+               {
+                    k+=c;
+           fprintf(f6,"%s ",code);
+           r=r-c;
+               }
+               else
+               {
+                   e[j]=k;
+                    j++;
+                   fprintf(f6,",\nT %x ",temp);
+                   r=30;
+                   k=0;
+                   fprintf(f6,"%s ",code);
+                   c=strlen(code);
+                     c=c/2;
+                     r=r-c;
+                     k+=c;
+               }
+           fscanf(f5,"%x %s %s %s %s",&temp,label,mn,op,code);
+           }
+           else
+           {
+          while(strcmp(mn,"resw")==0)
+        {
+
+     fscanf(f5,"%x %s %s %s %s",&temp,label,mn,op,code);
+     }
+
+c=strlen(code);
+                     c=c/2;
+           e[j]=k;
+      j++;
+     fprintf(f6,",\nT %x ",temp);
+                   r=30;
+                   k=0;
+       }
+       }
+       e[j]=k;
+       j++;
+       fprintf(f6,",\nE %x",start);
+      fclose(f6);
+      fclose(f5);
+
+
+  y=0;
+      f5=fopen("object2.txt","r");
+      f7=fopen("objfile.txt","w");
+
+        fscanf(f5,"%s %s %x",label,mn,&temp);
+     fprintf(f7,"H %s %x %x",label,temp,plen);
+        fscanf(f5,"%x %s %s %s %s",&temp,label,mn,op,code);
+    fprintf(f7,"\nT %x %x ",temp,e[y]);
+    y++;
+   r=30;
+       while(strcmp(mn,"end")!=0)
+       {
+           if(strcmp(mn,"resw")!=0)
+           {
+
+               c=strlen(code);
+               c=c/2;
+
+               if(c<=r)
+               {
+           fprintf(f7,"%s ",code);
+           r=r-c;
+
+               }
+               else
+               {
+                   fprintf(f7,"\nT %x %x ",temp,e[y]);
+                   y++;
+                   r=30;
+                   fprintf(f7,"%s ",code);
+                   c=strlen(code);
+                     c=c/2;
+                     r=r-c;
+               }
+           fscanf(f5,"%x %s %s %s %s",&temp,label,mn,op,code);
+           }
+           else
+           {
+while(strcmp(mn,"resw")==0)
+{
+
+     fscanf(f5,"%x %s %s %s %s",&temp,label,mn,op,code);
+}
+
+c=strlen(code);
+                     c=c/2;
+     fprintf(f7,"\nT %x %x ",temp,e[y]);
+     y++;
+                   r=30;
+           }
+       }
+       fprintf(f7,"\nE %x",start);
+      fclose(f1);
+      fclose(f2);
+      fclose(f5);
+      fclose(f7);
+
+}
